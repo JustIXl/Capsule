@@ -1,4 +1,12 @@
 " vundle 环境设置
+set nocp
+set nu
+set nofoldenable    " disable folding"
+"set backspace=indent,eol,start
+set backspace=2
+let python_highlight_all=1
+syntax on
+
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 " vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
@@ -29,25 +37,23 @@ Bundle 'scrooloose/syntastic'
 Plugin 'rakr/vim-one'
 Plugin 'klen/python-mode'
 Bundle 'Raimondi/delimitMate'
+Plugin 'danro/rename.vim'
 
 " 插件列表结束
 call vundle#end()
 filetype plugin indent on
 filetype plugin on
 
-let python_highlight_all=1
-syntax on
 
 if has('gui_running')
   set background=light
   colorscheme one 
 else
-  colorscheme Zenburn
+  colorscheme one 
 endif
 
 call togglebg#map("<F6>")
 
-set nu
 
 " markdown preview
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -70,6 +76,17 @@ nmap <F4> :NERDTreeToggle<cr>
 " font and size
 :set guifont=mononoki:14
 
+" Format {{{
+au BufNewFile,BufRead *.py
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set textwidth=79
+set expandtab
+set autoindent
+set fileformat=unix
+" }}}
+
 "python with virtualenv support
 py << EOF
 import os
@@ -80,6 +97,26 @@ if 'VIRTUAL_ENV' in os.environ:
   execfile(activate_this, dict(__file__=activate_this))
 EOF
 
+" shortcut
+:nnoremap <C-s> :update<CR>
+silent !stty -ixon > /dev/null 2>/dev/null
+:set clipboard=unnamed
+:set clipboard=unnamedplus
+
 " autocomplete
 au FileType python let b:delimitMate_nesting_quotes = ['"']
 au FileType mail let b:delimitMate_autoclose = 0
+
+" relative number
+autocmd InsertEnter * :set norelativenumber number
+autocmd InsertLeave * :set relativenumber
+
+" mutli cursor
+let g:multi_cursor_use_default_mapping=0
+" Default mapping
+let g:multi_cursor_next_key='<C-m>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
+
+set clipboard=unnamedplus
